@@ -43,6 +43,9 @@ this it looked like this (**index**: the index of the captured signal object, **
 the last signal):
 ![durations](durations.png)
 
+![decode](signal_detail_decode.png)
+
+
 Deriving from the plot above, the "lock" signal is sent twice. Looking closer at one "lock" signal, I figured out that
 the preamble has to be four 1 in a row. The end of the signal is identified with a long duration.
 ```commandline
@@ -58,12 +61,26 @@ the preamble has to be four 1 in a row. The end of the signal is identified with
                 signal_started = False
                 break
 ```
+
+
+
 Detailed look at one signal part:
 <ol>
 <li>Signal preamble seems to be four 1's</li>
 <li>Counting the zeros and ones, the signal is 60 Bit long</li>
 <li>The signal ends with a high duration</li>
 </ol>
+
+
+
+
+### More Signal Insight
+
+Looking at the cycle duration of the signal:
+```
+For a 0 = 37ms cycle time equals 27Hz
+For a 1 = 76ms cycle time equals 13Hz
+```
 
 ![durations](duration_detail.png)
 
@@ -147,9 +164,18 @@ for key in keys:
     hackRF.transmit(xor(signal,key))
 ```
 
-### Attacking [Todo]
+## Attacking [Todo]
 
+### Learning more about the signal
+Measuring the signal again in SDR-Console shows that the two peaks are about 80kHz appart, with a center frequenzy of 433.909Mhz.
 
+<img src="sigdiff.png" alt="drawing" width="1100"/>
+
+Deriving from [this](https://www.infineon.com/dgdl/TDA7110F_AN_Keyfob_Transmitter_Reference_v1.0.pdf?fileId=db3a30433a047ba0013a6e9580805ff1) 
+document found online about FSK, a frequency shift of 40kHz seams reasonable. Also this document states a **Datarate** of `2400 bits/sec` for a manchester
+encoded stream.
+
+![table6](tablefsk.png)
 
 
 
